@@ -1,0 +1,24 @@
+services:
+  db:
+    image: ankane/pgvector:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: smart_recall
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  localstack:
+    # <--- MAKE SURE THIS IS ALIGNED WITH 'db'
+    image: localstack/localstack:3.4.0
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,sqs
+      - DEBUG=1
+    # Note: Removed volumes for now to ensure a clean boot
+
+volumes:
+  postgres_data:
