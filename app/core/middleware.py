@@ -2,6 +2,7 @@ import time
 from fastapi import Request
 from app.models.base import SessionLocal
 from app.models.vault import AIRequestLog
+from fastapi.responses import JSONResponse
 
 # WHAT: A custom function to log every AI call
 async def log_ai_requests(request: Request, call_next):
@@ -12,9 +13,8 @@ async def log_ai_requests(request: Request, call_next):
     try:
         response = await call_next(request)
     except Exception as e:
-        print(f"🔥 Route Crash: {e}")
+        print(f"Route Crash: {e}")
         # If the route itself crashes, we still want to finish the middleware
-        from fastapi.responses import JSONResponse
         response = JSONResponse(status_code=500, content={"detail": "Internal Server Error"})
 
     process_time = time.time() - start_time

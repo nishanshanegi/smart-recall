@@ -1,4 +1,4 @@
-# 🧠 Smart-Recall: Intelligent Personal Knowledge Vault
+# 🧠  DumpAI: Intelligent Personal Knowledge Vault
 
 A scalable, asynchronous RAG (Retrieval-Augmented Generation) backend that transforms messy personal data (Text, Images, PDFs) into a searchable AI-powered knowledge base.
 

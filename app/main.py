@@ -6,7 +6,11 @@ from app.core.middleware import log_ai_requests # Import your new function
 from starlette.middleware.base import BaseHTTPMiddleware
 from app.api import ingest, query, auth
 
-app = FastAPI(title="Smart-Recall API") #Creating an instance of the FastAPI class.  what Uvicorn (the server) looks for
+app = FastAPI(
+    title="DumpAI: The Intelligent Data Vault",
+    description="A high-performance RAG backend for unstructured data ingestion.",
+    version="1.0.0"
+) #Creating an instance of the FastAPI class.  what Uvicorn (the server) looks for
 
 app.add_middleware(
     CORSMiddleware,

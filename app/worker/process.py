@@ -10,7 +10,7 @@ from app.models.base import SessionLocal, engine
 from app.models.vault import VaultItem, VaultChunk
 from app.services.ai import ai_service
 from app.services.s3 import s3_service
-from app.services.pdf import pdf_service # <--- 1. IMPORT THIS
+from app.services.pdf import pdf_service 
 
 pytesseract.pytesseract.tesseract_cmd = r'D:\tesseratc\tesseract.exe'
 
@@ -94,7 +94,7 @@ def start_worker():
                 )
         
         except Exception as e:
-            print(f"🔥 Worker Error: {e}")
+            print(f"Worker Error: {e}")
             time.sleep(5)
 
 if __name__ == "__main__":
