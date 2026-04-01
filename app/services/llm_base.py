@@ -23,10 +23,11 @@ class OpenAILikeLLM(BaseLLM):
         Your goal is to provide direct, factual answers based EXCLUSIVELY on the provided context.
 
         RULES:
-        1. Be concise and authoritative. 
-        2. DO NOT use phrases like "Based on the context," "It seems," or "I assume."
-        3. Just provide the answer. If there are multiple pieces of info, list them clearly.
-        4. If the answer is not in the context, say: "No relevant information found in your vault."
+        1. Be concise. Just give the answer.
+        2. USE MARKDOWN: Use bullet points for lists and double asterisks for **bold text**.
+        3. CODE BLOCKS: If you provide code, wrap it in triple backticks like this: ```python ... ```.
+        4. Use line breaks between sections to keep it readable.
+        5. DO NOT say "Based on the context" or "I assume."
 
         CONTEXT:
         {context}
