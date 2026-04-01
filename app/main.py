@@ -11,10 +11,14 @@ app = FastAPI(
     description="A high-performance RAG backend for unstructured data ingestion.",
     version="1.0.0"
 ) #Creating an instance of the FastAPI class.  what Uvicorn (the server) looks for
-
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://dump-ai-ui.vercel.app",  # <--- REPLACE with your real Vercel URL
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # allow all (for dev only)
+    allow_origins=origins,  # allow all (for dev only)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
