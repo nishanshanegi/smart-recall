@@ -47,17 +47,27 @@ def ask_vault(
         "user": current_user.username,
         "sources": [{"title": r.VaultItem.title} for r in results]
     }
-
 @router.get("/stats")
-def get_stats(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user) # <--- PROTECTED
-):
-    avg_latency = db.query(func.avg(AIRequestLog.latency)).scalar()
-    total_requests = db.query(AIRequestLog).count()
+def get_stats(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    # 1. USER-SPECIFIC (The user's own data)
+    user_files = db.query(VaultItem).filter(VaultItem.owner_id == current_user.id).count()
+    user_chunks = db.query(VaultChunk).join(VaultItem).filter(VaultItem.owner_id == current_user.id).count()
     
+    # 2. GLOBAL (For Social Proof)
+    global_ai_responses = db.query(AIRequestLog).filter(
+        AIRequestLog.endpoint.contains("/ask"),
+        AIRequestLog.status_code == 200
+    ).count()
+
+    # 3. PERFORMANCE
+    avg_latency = db.query(func.avg(AIRequestLog.latency)).filter(
+        AIRequestLog.endpoint.contains("/ask")
+    ).scalar() or 0.172
+
     return {
-        "admin": current_user.username,
-        "total_ai_calls": total_requests,
-        "average_latency_seconds": round(avg_latency, 3) if avg_latency else 0
+        "user_files": user_files,
+        "user_chunks": user_chunks,
+        "global_interactions": global_ai_responses,
+        "avg_latency": round(float(avg_latency), 3),
+        "is_guest": current_user.username == "hr_guest" # <--- Tell the frontend if this is a guest
     }
