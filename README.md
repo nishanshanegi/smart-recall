@@ -1,5 +1,9 @@
 # 🧠 Smart-Recall: Intelligent Personal Knowledge Vault
 
+# Problem Statement
+We consume a massive amount of information daily—articles, voice notes, screenshots of receipts, and PDFs—but we can never find them later unless we remember the exact filename. Standard search is "Keyword based"; it doesn't understand "Meaning."
+The Solution:
+A scalable backend that allows a user to "dump" data from any source (API, File Upload, or Webhook) and then ask questions about it later in natural language.
 A scalable, asynchronous RAG (Retrieval-Augmented Generation) backend that transforms messy personal data (Text, Images, PDFs) into a searchable AI-powered knowledge base.
 
 ## 🚀 Key Technical Features
