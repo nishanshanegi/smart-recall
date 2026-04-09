@@ -4,10 +4,12 @@
 import time
 import json
 import io
+import threading
 from PIL import Image
 import pytesseract
 from pypdf import PdfReader
-
+import os
+from http.server import BaseHTTPRequestHandler, HTTPServer 
 from app.services.sqs import sqs_service
 from app.models.base import SessionLocal, engine
 from app.models.vault import VaultItem, VaultChunk
@@ -15,9 +17,31 @@ from app.services.ai import ai_service
 from app.services.s3 import s3_service
 from app.services.pdf import pdf_service 
 
-pytesseract.pytesseract.tesseract_cmd = r'D:\tesseratc\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
+
+# --- RENDER HEALTH CHECK TRICK ---
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Worker is alive")
+
+    def log_message(self, format, *args):
+        return # This keeps the logs clean by hiding the health check pings
+
+def run_health_server():
+    # Render provides a PORT environment variable. We must listen on it.
+    port = int(os.environ.get("PORT", 8000))
+    server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
+    print(f"🌍 Dummy health server started on port {port}")
+    server.serve_forever()
 
 def start_worker():
+    # WHAT: Start the dummy web server on a separate background thread
+    # WHY: This answers Render's "Is the app alive?" check while the main thread talks to SQS
+    health_thread = threading.Thread(target=run_health_server, daemon=True)
+    health_thread.start()
+
     print("Worker checking database connection...")
     try:
         with engine.connect() as conn:
