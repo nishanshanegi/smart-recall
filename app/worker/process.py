@@ -1,3 +1,6 @@
+#background worker service
+#that continuously listens to a queue (AWS SQS), processes files (PDF/Image/Text), extracts content, and stores AI embeddings in your database.
+
 import time
 import json
 import io

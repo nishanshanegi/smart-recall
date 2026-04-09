@@ -23,7 +23,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(BaseHTTPMiddleware, dispatch=log_ai_requests)
+app.add_middleware(
+    BaseHTTPMiddleware,
+    dispatch=log_ai_requests
+)
 
 @app.on_event("startup") #decorater that tells "Run this function when server starts"
 def on_startup():

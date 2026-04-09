@@ -1,12 +1,14 @@
+import torch
 from sentence_transformers import SentenceTransformer
 from app.services.llm_base import get_llm
 
 class AIService:
     def __init__(self):
+        torch.set_num_threads(1)
         # 1. THE SEARCH BRAIN (Local)
         # Load the model once into memory
         print("📥 Loading Local Embedding Model...")
-        self.embed_model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.embed_model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
         print("✅ Embedding Model Loaded!")
 
         # 2. THE ANSWERING BRAIN (Generic LLM)

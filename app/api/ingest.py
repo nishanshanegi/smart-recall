@@ -20,6 +20,7 @@ def get_db():
         db.close()
 
 @router.post("/ingest")
+# 1. Save record to Postgres (Status is implicitly 'pending')
 async def ingest_data(
     request: IngestRequest, 
     db: Session = Depends(get_db),

@@ -1,4 +1,5 @@
-# tandard Postgres doesn't know what a "Vector" (mathematical representation of meaning) is. We have to enable it.
+# standard Postgres doesn't know what a "Vector" (mathematical representation of meaning) is. We have to enable it.
+#Telling PostgreSQL to enable the vector extension
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base 

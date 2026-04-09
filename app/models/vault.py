@@ -1,5 +1,5 @@
 #database shape-> This is exactly how the table looks inside Postgres.
-
+#The Schema
 from sqlalchemy import Column, Integer, String, DateTime, Text
 from sqlalchemy.sql import func
 from pgvector.sqlalchemy import Vector
@@ -12,10 +12,16 @@ class VaultItem(Base):
     __tablename__ = "vault_items"
 
     id = Column(Integer, primary_key=True, index=True)
+    # WHAT: The type of data (e.g., "image", "url", "text")
+    # WHY: So the worker knows whether to run OCR or a Web Scraper.
     content_type = Column(String, nullable=False)
+
     title = Column(String, nullable=True)
+    # WHY: We don't store "Files" in the DB. We store "Links" to S3.
     s3_key = Column(String, nullable=True)
     extracted_content = Column(Text, nullable=True)
+    #magine every piece of information is a point in a massive 3D map. "Apple" is close to "Banana." 
+    # "Apple" is far from "Car." 1536 is simply the "Resolution" of that map. The higher the number, the more detail the AI captures about the meaning.
     embedding = Column(Vector(384), nullable=True) # 384 is the MAGIC number for our model
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     chunks = relationship("VaultChunk", back_populates="parent")
