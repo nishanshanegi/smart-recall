@@ -1,28 +1,26 @@
-# 1. Start with a lightweight Python image
+# 1. Use an even smaller base image
 FROM python:3.12-slim
 
-# 2. Install Tesseract OCR and system dependencies
-# WHY: Render's default environment doesn't have Tesseract. We must install it.
+# 2. Install dependencies and CLEAN UP in the same command
+# WHY: In Docker, every 'RUN' creates a layer. If we delete junk in a separate RUN, 
+# it stays in the previous layer. We must delete it in the SAME line.
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     libtesseract-dev \
     gcc \
     python3-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-# 3. Set the working directory
 WORKDIR /app
 
-# 4. Copy and install Python dependencies
+# 3. Use the CPU-only version of Torch (Crucial for size!)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu && \
+    pip install --no-cache-dir -r requirements.txt
 
-# 5. Copy your entire project code
 COPY . .
 
-# 6. Expose the port FastAPI runs on
 EXPOSE 8000
 
-# Default command (Render will override this for the worker)
 CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
